@@ -21,6 +21,8 @@ export function Router({ router }: RouteProps) {
       window.addEventListener(POPSTATE, onLocationChange);
     };
   }, []);
+  console.log(currentPath);
+
   const Page = router.find((r) => r.path == currentPath)?.component;
   const DefaultComponent = () => <h1>404</h1>;
   return Page ? <Page /> : <DefaultComponent />;

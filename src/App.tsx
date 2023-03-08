@@ -1,36 +1,21 @@
-import { Suspense, useEffect, useState } from "react";
 import { Router } from "./Router";
-import HomePage from "./pages/Home";
-import AboutPage from "./pages/About";
-let test: any = [];
-async function main() {
-  const res = await import("./pages/Home");
-  const res2 = await import("./pages/About");
-  const route = { path: "/", component: res.default };
-  const route2 = { path: "/about", component: res2.default };
-  test.push(route);
-  test.push(route2);
-  console.log("tengo la ruta");
+import routes from "./pages/pages.json";
+async function getRoutes() {
+  const pages = routes.pages;
+  let component = [];
+  component = pages.map(async (p) => {
+    const comp = await import("./pages" + p.module);
+    return { path: p.path.toLowerCase(), component: comp.default };
+  });
+  return await Promise.all(component);
 }
-await main();
-const ROUTES = [
-  {
-    path: "/",
-    component: HomePage,
-  },
-  {
-    path: "/about",
-    component: AboutPage,
-  },
-];
+const paths = await getRoutes();
 
 function App() {
   return (
     <main>
       <h1>MJD-Router</h1>
-      <Suspense fallback={<div>cargando..</div>}>
-        <Router router={test} />
-      </Suspense>
+      <Router router={paths} />
     </main>
   );
 }

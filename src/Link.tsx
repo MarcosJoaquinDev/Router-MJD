@@ -1,5 +1,4 @@
 const PUSHSTATE = "pushstate";
-const POPSTATE = "popstate";
 function navigate(href: string) {
   window.history.pushState({}, "", href);
   const navigationEvent = new Event(PUSHSTATE);

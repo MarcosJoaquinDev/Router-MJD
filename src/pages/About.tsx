@@ -4,7 +4,7 @@ export default function AboutPage() {
     <>
       <h3>About</h3>
       <p>Hola Me llamo marcos y esto es un react-router</p>
-      <Link to="/"> ir a Home</Link>
+      <Link to="/home"> ir a Home</Link>
     </>
   );
 }
