@@ -1,4 +1,4 @@
-import { Link } from "../Link";
+import { Link } from "../router/Link";
 export default function HomePage() {
   return (
     <>

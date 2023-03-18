@@ -1,4 +1,5 @@
-import { Router } from "./Router";
+import { lazy, Suspense } from "react";
+import { Router } from "./router/Router";
 import routes from "./pages/pages.json";
 async function getRoutes() {
   const pages = routes.pages;
@@ -8,6 +9,7 @@ async function getRoutes() {
     return { path: p.path.toLowerCase(), component: comp.default };
   });
   return await Promise.all(component);
+  //return component;
 }
 const paths = await getRoutes();
 

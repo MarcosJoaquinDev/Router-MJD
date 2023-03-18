@@ -1,10 +1,9 @@
-import { Link } from "../Link";
+import { Link } from "../router/Link";
 export default function AboutPage() {
   return (
     <>
-      <h3>About</h3>
-      <p>Hola Me llamo marcos y esto es un react-router</p>
-      <Link to="/home"> ir a Home</Link>
+      <h3>About Page</h3>
+      <Link to="/">ir al About</Link>
     </>
   );
 }

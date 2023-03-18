@@ -1,1 +1,1 @@
-{"pages":[{"path":"/About","module":"/About.tsx"},{"path":"/Home","module":"/Home.tsx"},{"path":"/","module":"/index.tsx"}]}
+{"pages":[{"path":"/About","module":"/About.tsx"},{"path":"/Home","module":"/Home.tsx"},{"path":"/Layout/","module":"/Layout/index.tsx"},{"path":"/","module":"/index.tsx"}]}

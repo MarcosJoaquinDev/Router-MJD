@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "router": "node ./src/router/index.js",
-    "dev": "vite",
+    "write": "node ./src/router/index.js",
+    "watch": "node ./src/router/watcher.js",
+    "vite": "vite",
+    "dev": "npm run watch & vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

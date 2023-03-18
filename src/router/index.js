@@ -17,6 +17,7 @@ async function createPagePaths(){
   })
   const pages = paths.filter(p => p);
   fs.writeFileSync(_INDEX_PATH + '/pages.json',JSON.stringify({pages}),'utf-8');
+
 }
 
 function iterateFolderApp(indexDir) {
@@ -31,4 +32,4 @@ function iterateFolderApp(indexDir) {
     }
   });
 }
-createPagePaths();
+await createPagePaths();
