@@ -1,0 +1,1 @@
+{"pages":[{"path":"/About","module":"/About.tsx"},{"path":"/Home","module":"/Home.tsx"},{"path":"/","module":"/index.tsx"},{"path":"/product/:id","module":"/product/[id].tsx"},{"path":"/products/:IdProduct","module":"/products/[IdProduct].tsx"}]}

@@ -1,22 +1,35 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-const ROUTES = [];
+// [index path pages] Folder app
+const DIR_PAGES = '../pages';
+const JSON_PAGES = '/pages.json';
+
+// [root] dirname root
 const {pathname: root} = new URL('./',import.meta.url);
-const _INDEX_PATH = path.join(root,'../pages');
+
+// [index path] path of folder app
+const INDEX_PATH = path.join(root,DIR_PAGES);
+const JSON_DIR = path.join(root,JSON_PAGES);
+// [paths dir app ] Array for paths of app directory
+// "../app/index.jsx ../app/home/index.tsx ../etc "
+const PATHS_DIR_APP = [];
+const replacingDynamicPaths = (path) => path.replace(/\[/g, ':').replace(/\]/g, '');
+const removePathIndex = (path) => path.replace(INDEX_PATH, '');
 
 async function createPagePaths(){
-  iterateFolderApp(_INDEX_PATH)
-  const paths = ROUTES.map( r => {
-    const route = r.replace(_INDEX_PATH, '');
+  iterateFolderApp(INDEX_PATH);
+  const paths = PATHS_DIR_APP.map( r => {
+    let route = removePathIndex(r);
+    let pathRoute = replacingDynamicPaths(route);
     const isAPage = route.includes('.jsx') || route.includes('.tsx');
     const isAIndexPage = route.includes('index.');
-    if(isAPage && isAIndexPage) return { path:route.slice(0,-9), module:route}
-    if (isAPage) return { path:route.slice(0,-4), module:route}
+    if (isAPage && isAIndexPage) return { path:pathRoute.slice(0,-9), module:route}
+    if (isAPage) return { path:pathRoute.slice(0,-4), module:route}
     return false;
   })
   const pages = paths.filter(p => p);
-  fs.writeFileSync(_INDEX_PATH + '/pages.json',JSON.stringify({pages}),'utf-8');
+  fs.writeFileSync(JSON_DIR, JSON.stringify({pages}), 'utf-8');
 
 }
 
@@ -28,7 +41,7 @@ function iterateFolderApp(indexDir) {
     if (statistics.isDirectory()) {
       iterateFolderApp(route);
     } else {
-      ROUTES.push(route);
+      PATHS_DIR_APP.push(route);
     }
   });
 }
