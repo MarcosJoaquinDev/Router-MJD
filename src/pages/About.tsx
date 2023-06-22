@@ -1,9 +1,3 @@
-import { Link } from "../router/Link";
-export default function AboutPage() {
-  return (
-    <>
-      <h3>About Page</h3>
-      <Link to="/">ir al About</Link>
-    </>
-  );
+export default function About() {
+  return <h2>About</h2>;
 }

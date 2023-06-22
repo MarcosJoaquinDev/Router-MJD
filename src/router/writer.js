@@ -17,9 +17,9 @@ const PATHS_DIR_APP = [];
 const replacingDynamicPaths = (path) => path.replace(/\[/g, ':').replace(/\]/g, '');
 const removePathIndex = (path) => path.replace(INDEX_PATH, '');
 
-async function createPagePaths(){
+export async function createPagePaths(){
   iterateFolderApp(INDEX_PATH);
-  const paths = PATHS_DIR_APP.map( r => {
+  const pages = PATHS_DIR_APP.map( r => {
     let route = removePathIndex(r);
     let pathRoute = replacingDynamicPaths(route);
     const isAPage = route.includes('.jsx') || route.includes('.tsx');
@@ -27,8 +27,8 @@ async function createPagePaths(){
     if (isAPage && isAIndexPage) return { path:pathRoute.slice(0,-9), module:route}
     if (isAPage) return { path:pathRoute.slice(0,-4), module:route}
     return false;
-  })
-  const pages = paths.filter(p => p);
+  }).filter(Boolean);
+
   fs.writeFileSync(JSON_DIR, JSON.stringify({pages}), 'utf-8');
 
 }
@@ -45,4 +45,4 @@ function iterateFolderApp(indexDir) {
     }
   });
 }
-await createPagePaths();
+//await createPagePaths();

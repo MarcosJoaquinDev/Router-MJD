@@ -1,9 +1,5 @@
-const PUSHSTATE = "pushstate";
-function navigate(href: string) {
-  window.history.pushState({}, "", href);
-  const navigationEvent = new Event(PUSHSTATE);
-  window.dispatchEvent(navigationEvent);
-}
+import { navigate } from "./navigate";
+
 type LinkPros = {
   to: string;
   target?: "_blank" | "_self" | "_parent" | "top";

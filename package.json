@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "write": "node ./src/router/index.js",
     "watch": "node ./src/router/watcher.js",
     "vite": "vite",
-    "dev": "npm run watch & vite",
+    "dev": "node ./src/router/watcher.js & vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

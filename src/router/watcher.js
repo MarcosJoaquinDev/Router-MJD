@@ -1,8 +1,12 @@
 import chokidar from 'chokidar'
 import * as path from 'path'
-import {exec}  from 'child_process';
+import { createPagePaths } from './writer.js'
 const {pathname: root} = new URL('./',import.meta.url);
 const _INDEX_PATH = path.join(root,'../pages');
+
+
+await createPagePaths()
+
 
 function main(){
   const watcher = chokidar.watch(_INDEX_PATH, {
@@ -12,17 +16,14 @@ function main(){
   });
   let tempPath = '';
   watcher
-    .on('add', path => {
-      console.log(`Archivo creado : ${path}`)
+    .on('add',async  path => {
       tempPath = searchRoutePath(path);
-      if( isAPage(path) ) writer()
+      if( isAPage(path) ) await createPagePaths()
     })
     .on('unlink', async path =>{
-       console.log(`Archivo borrado : ${path}`);
        const routeFileRemove = searchRoutePath(path);
        const fileChange = tempPath == routeFileRemove;
-       console.log(tempPath, '---',routeFileRemove);
-       if( isAPage(path) && !fileChange) writer()
+       if( isAPage(path) && !fileChange) await createPagePaths()
        tempPath = '';
     })
 }
@@ -30,18 +31,8 @@ main()
 function isAPage(path){
   return path.includes('.tsx') || path.includes('.jsx');
 }
-function writer(){
-  exec('npm run write', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error al ejecutar el script: ${error}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-  });
-  }
-  function searchRoutePath(path){
-    const lastIndex = path.lastIndexOf('/')
-    const namePath = path.slice(0,-(path.length - lastIndex))
-    return namePath;
-  }
+function searchRoutePath(path){
+  const lastIndex = path.lastIndexOf('/')
+  const namePath = path.slice(0,-(path.length - lastIndex))
+  return namePath;
+}
