@@ -1,12 +1,17 @@
 # Router-MJD
+
 ## Custom react router
 
-### Aconsejo crear primero un proyecto con [Vite](https://vitejs.dev/)
-### luego instalar el paquete del mjd-router
+### I advise to create a project with [Vite](https://vitejs.dev/) first
+
+### then install the mjd-router package
+
 ```
 npm install mjd-router
 ```
-### Agregar este script en el package.json para correr la sobrescritura de los archivos que vayas cambiando
+
+### Add this script in the package.json to run the overwrite of the files that change
+
 ```json
 "scripts": {
   "watch": "node node_modules/mjd-router/lib/router/watcher.js",
@@ -15,13 +20,14 @@ npm install mjd-router
 ...
 }
 ```
-### por ultimo agregar en el root del proyecto (en caso de Vite es en el archivo main.jsx), el componente router
+
+### finally add in the root of the project (in the case of Vite it is in the main.jsx file), the router component
 
 ```javascript
-import {Router} from 'mjd-router';
-ReactDOM.createRoot(document.getElementById('root')).render(
+import { Router } from "mjd-router";
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
 ```
