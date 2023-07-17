@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 // [index path pages] Folder app
-const DIR_PAGES = '../pages';
+const DIR_PAGES = '../../../../src/pages';
 const JSON_PAGES = '/pages.json';
 
 // [root] dirname root
@@ -17,9 +17,9 @@ const PATHS_DIR_APP = [];
 const replacingDynamicPaths = (path) => path.replace(/\[/g, ':').replace(/\]/g, '');
 const removePathIndex = (path) => path.replace(INDEX_PATH, '');
 
-export async function createPagePaths(){
+async function createPagePaths(){
   iterateFolderApp(INDEX_PATH);
-  const pages = PATHS_DIR_APP.map( r => {
+   const paths = PATHS_DIR_APP.map( r => {
     let route = removePathIndex(r);
     let pathRoute = replacingDynamicPaths(route);
     const isAPage = route.includes('.jsx') || route.includes('.tsx');
@@ -27,8 +27,8 @@ export async function createPagePaths(){
     if (isAPage && isAIndexPage) return { path:pathRoute.slice(0,-9), module:route}
     if (isAPage) return { path:pathRoute.slice(0,-4), module:route}
     return false;
-  }).filter(Boolean);
-
+  })
+  const pages = paths.filter(p=>p);
   fs.writeFileSync(JSON_DIR, JSON.stringify({pages}), 'utf-8');
 
 }
@@ -45,4 +45,4 @@ function iterateFolderApp(indexDir) {
     }
   });
 }
-//await createPagePaths();
+await createPagePaths();

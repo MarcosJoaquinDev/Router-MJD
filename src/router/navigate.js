@@ -1,5 +1,5 @@
 const PUSHSTATE = "pushstate";
-export function navigate(href: string) {
+export function navigate(href) {
   window.history.pushState({}, "", href);
   const navigationEvent = new Event(PUSHSTATE);
   window.dispatchEvent(navigationEvent);

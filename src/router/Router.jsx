@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import { match } from "path-to-regexp";
+import {useRoutes} from './useRoutes';
+
 const PUSHSTATE = "pushstate";
 const POPSTATE = "popstate";
-type router = {
-  path: string;
-  component: any;
-};
-type RouteProps = {
-  router: router[];
-};
-export function Router({ router }: RouteProps) {
+export function Router() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+ const router = useRoutes();
+
   useEffect(() => {
     const onLocationChange = () => {
       setCurrentPath(window.location.pathname);
@@ -34,7 +31,7 @@ export function Router({ router }: RouteProps) {
   });
 
   const Page = pathComponent?.component;
-  const DefaultComponent = ({ routeParams }: any) => <h1>404</h1>;
+  const DefaultComponent = ({ routeParams }) => <h1>404</h1>;
   return Page ? (
     <Page routeParams={routesParams} />
   ) : (
