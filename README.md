@@ -1,5 +1,5 @@
 # Router-MJD
-##Custom react router
+## Custom react router
 
 ### Aconsejo crear primero un proyecto con [Vite](https://vitejs.dev/)
 ### luego instalar el paquete del mjd-router
