@@ -1,6 +1,6 @@
 # Router-MJD
 custom react router
-´´´
+´
 import {Router} from 'mjd-router';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -8,5 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Router />
   </React.StrictMode>,
 )
-
-´´´
+´
