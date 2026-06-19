@@ -7,8 +7,8 @@ export default function Home() {
         <div className="logo">📁 File Router</div>
 
         <div className="nav-links">
-          <a href="#">Docs</a>
-          <a href="#">GitHub</a>
+          <a href="/docs">Docs</a>
+          <a href="https://github.com/MarcosJoaquinDev/Router-MJD" target="blank">GitHub</a>
         </div>
       </nav>
 
@@ -21,7 +21,7 @@ export default function Home() {
         </p>
 
         <div className="hero-buttons">
-          <Link to="/about">
+          <Link to="/docs">
             <button>Comenzar</button>
           </Link>
 

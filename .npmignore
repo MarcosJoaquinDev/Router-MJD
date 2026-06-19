@@ -2,5 +2,10 @@ src
 public
 index.html
 pnpm-lock.yaml
-vite.config.js
+vite.config.*
 .swcrc
+tsconfig*.json
+globals.css
+dist
+*.md
+.*

@@ -1,10 +1,14 @@
 {
   "name": "mjd-router",
   "description": "Enrutador para React, basado en una arquitectura de carpetas",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "lib/router/index.js",
   "module": "lib/router/index.js",
+  "bin": {
+    "mjd-router-write": "./bin/mjd-router-write.js",
+    "mjd-router-watch": "./bin/mjd-router-watch.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/MarcosJoaquinDev/Router-MJD"

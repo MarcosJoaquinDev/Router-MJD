@@ -1,1 +1,0 @@
-{"pages":[{"path":"/About","module":"/About.jsx"},{"path":"/Contact","module":"/Contact.jsx"},{"path":"/","module":"/index.jsx"},{"path":"/product/:productId","module":"/product/[productId].jsx"}]}

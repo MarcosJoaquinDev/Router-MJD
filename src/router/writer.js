@@ -1,18 +1,18 @@
-import { existsSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { PAGES_DIR, PAGES_JSON_PATH, PUBLIC_PAGES_JSON_PATH, isPageFile } from './constants.js';
+import { PAGES_DIR, PAGES_JSON_PATH, isPageFile } from './constants.js';
 
 function toRoutePath(absolutePath) {
   let route = absolutePath
     .replace(PAGES_DIR, '')
-    .replace(/\[(\w+)\]/g, ':$1');
+    .replace(/\s+/g, '%20')
+    .replace(/\[([^/]+)\]/g, ':$1');
 
-  if (/\bindex\.(jsx|tsx)$/.test(route)) {
-    return route.replace(/\/?index\.(jsx|tsx)$/, '') || '/';
+  if (/\bindex\.(jsx|tsx)$/i.test(route)) {
+    return route.replace(/\/?index\.(jsx|tsx)$/i, '') || '/';
   }
 
-  return route.replace(/\.(jsx|tsx)$/, '');
+  return route.replace(/\.(jsx|tsx)$/i, '');
 }
 
 async function walkDirectory(dirPath) {
@@ -41,11 +41,8 @@ export async function createPagePaths() {
     }));
 
     const payload = JSON.stringify({ pages });
+    await fs.mkdir(path.dirname(PAGES_JSON_PATH), { recursive: true });
     await fs.writeFile(PAGES_JSON_PATH, payload, 'utf-8');
-
-    if (existsSync(path.dirname(PUBLIC_PAGES_JSON_PATH))) {
-      await fs.writeFile(PUBLIC_PAGES_JSON_PATH, payload, 'utf-8');
-    }
 
     console.log(`pages.json generated — ${pages.length} route(s)`);
   } catch (err) {
