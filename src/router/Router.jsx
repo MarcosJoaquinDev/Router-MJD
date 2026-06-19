@@ -25,21 +25,21 @@ export function Router() {
     return <div style={{ color: '#ccc' }}>Loading...</div>;
   }
 
-  let routesParams = {};
+  let routeParams = {};
   const pathComponent = router.find((r) => {
     if (r.path === currentPath) return true;
     const matchUrl = match(r.path, { decode: decodeURIComponent, sensitive: false });
     const matched = matchUrl(currentPath);
     if (!matched) return false;
-    routesParams = matched.params;
+    routeParams = matched.params;
     return true;
   });
 
   const Page = pathComponent?.component;
-  const DefaultComponent = ({ routeParams }) => <h1>404</h1>;
+  const DefaultComponent = () => <h1>404</h1>;
   return Page ? (
-    <Page routeParams={routesParams} />
+    <Page routeParams={routeParams} />
   ) : (
-    <DefaultComponent routeParams={routesParams} />
+    <DefaultComponent />
   );
 }

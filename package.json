@@ -6,12 +6,12 @@
   "main": "lib/router/index.js",
   "module": "lib/router/index.js",
   "bin": {
-    "mjd-router-write": "./bin/mjd-router-write.js",
-    "mjd-router-watch": "./bin/mjd-router-watch.js"
+    "mjd-router-write": "bin/mjd-router-write.js",
+    "mjd-router-watch": "bin/mjd-router-watch.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarcosJoaquinDev/Router-MJD"
+    "url": "git+https://github.com/MarcosJoaquinDev/Router-MJD.git"
   },
   "exports": {
     ".": {
