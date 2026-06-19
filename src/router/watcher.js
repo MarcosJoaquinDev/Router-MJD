@@ -1,47 +1,40 @@
-import chokidar from 'chokidar'
-import * as path from 'path'
-import {exec} from 'child_process'
-const {pathname: root} = new URL('./',import.meta.url);
-const _INDEX_PATH = path.join(root,'../../../../src/pages');
+import chokidar from 'chokidar';
+import { PAGES_DIR, isPageFile } from './constants.js';
+import { createPagePaths } from './writer.js';
 
-function main(){
-  const watcher = chokidar.watch(_INDEX_PATH, {
-    ignored: /^\./, // Ignora los archivos y carpetas ocultos
-    persistent: true, // Mantener la observación activa después de la primera ejecución
+let writeTimer = null;
+
+function debouncedWrite() {
+  if (writeTimer) clearTimeout(writeTimer);
+  writeTimer = setTimeout(async () => {
+    writeTimer = null;
+    try {
+      await createPagePaths();
+    } catch (err) {
+      console.error('Watcher: write error', err);
+    }
+  }, 200);
+}
+
+function main() {
+  const watcher = chokidar.watch(PAGES_DIR, {
+    ignored: /(^|[/\\])\../,
+    persistent: true,
     ignoreInitial: true,
   });
-  let tempPath = '';
-  watcher
-    .on('add', async path => {
-      console.log('add');
-      tempPath = searchRoutePath(path);
-      if( isAPage(path) )write()
 
+  watcher
+    .on('add', (filePath) => {
+      if (isPageFile(filePath)) debouncedWrite();
     })
-    .on('unlink',async path =>{
-      console.log('unlink');
-       const routeFileRemove = searchRoutePath(path);
-       const fileChange = tempPath == routeFileRemove;
-       if( isAPage(path) && !fileChange) await write()
-       tempPath = '';
+    .on('unlink', (filePath) => {
+      if (isPageFile(filePath)) debouncedWrite();
     })
+    .on('error', (error) => {
+      console.error('Watcher error:', error.message);
+    });
+
+  console.log(`Watching ${PAGES_DIR} for changes...`);
 }
-main()
-function isAPage(path){
-  return path.includes('.tsx') || path.includes('.jsx');
-}
-function write(){
-  exec('npm run write',(error,stdout,stderr)=>{
-    if(error){
-      console.error('error');
-      return
-    }
-    console.log('stdoout: ',stdout);
-    console.error('stderr: ',stderr);
-  })
-}
-function searchRoutePath(path){
-  const lastIndex = path.lastIndexOf('/')
-  const namePath = path.slice(0,-(path.length - lastIndex))
-  return namePath;
-}
+
+main();

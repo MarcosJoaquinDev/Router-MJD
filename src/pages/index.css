@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+.home {
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 60px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  max-width: 700px;
+  margin: auto;
+  color: #94a3b8;
+  line-height: 1.7;
+  font-size: 1.2rem;
+}
+
+.hero-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid #334155;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  padding: 60px;
+}
+
+.card {
+  background: #111827;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #1e293b;
+}
+
+.card h3 {
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #94a3b8;
+}
+
+.example {
+  padding: 60px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.example h2 {
+  margin-bottom: 20px;
+}
+
+pre {
+  background: #111827;
+  padding: 24px;
+  border-radius: 16px;
+  overflow-x: auto;
+  border: 1px solid #1e293b;
+}

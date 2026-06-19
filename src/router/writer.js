@@ -1,48 +1,60 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { existsSync } from 'fs';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { PAGES_DIR, PAGES_JSON_PATH, PUBLIC_PAGES_JSON_PATH, isPageFile } from './constants.js';
 
-// [index path pages] Folder app
-const DIR_PAGES = '../../../../src/pages';
-const JSON_PAGES = '/pages.json';
+function toRoutePath(absolutePath) {
+  let route = absolutePath
+    .replace(PAGES_DIR, '')
+    .replace(/\[(\w+)\]/g, ':$1');
 
-// [root] dirname root
-const {pathname: root} = new URL('./',import.meta.url);
+  if (/\bindex\.(jsx|tsx)$/.test(route)) {
+    return route.replace(/\/?index\.(jsx|tsx)$/, '') || '/';
+  }
 
-// [index path] path of folder app
-const INDEX_PATH = path.join(root,DIR_PAGES);
-const JSON_DIR = path.join(root,JSON_PAGES);
-// [paths dir app ] Array for paths of app directory
-// "../app/index.jsx ../app/home/index.tsx ../etc "
-const PATHS_DIR_APP = [];
-const replacingDynamicPaths = (path) => path.replace(/\[/g, ':').replace(/\]/g, '');
-const removePathIndex = (path) => path.replace(INDEX_PATH, '');
-
-async function createPagePaths(){
-  iterateFolderApp(INDEX_PATH);
-   const paths = PATHS_DIR_APP.map( r => {
-    let route = removePathIndex(r);
-    let pathRoute = replacingDynamicPaths(route);
-    const isAPage = route.includes('.jsx') || route.includes('.tsx');
-    const isAIndexPage = route.includes('index.');
-    if (isAPage && isAIndexPage) return { path:pathRoute.slice(0,-9), module:route}
-    if (isAPage) return { path:pathRoute.slice(0,-4), module:route}
-    return false;
-  })
-  const pages = paths.filter(p=>p);
-  fs.writeFileSync(JSON_DIR, JSON.stringify({pages}), 'utf-8');
-
+  return route.replace(/\.(jsx|tsx)$/, '');
 }
 
-function iterateFolderApp(indexDir) {
-  const files = fs.readdirSync(indexDir,'utf-8');
-  files.forEach((file) => {
-    const route = path.join(indexDir, file);
-    const statistics = fs.statSync(route);
-    if (statistics.isDirectory()) {
-      iterateFolderApp(route);
-    } else {
-      PATHS_DIR_APP.push(route);
+async function walkDirectory(dirPath) {
+  const entries = await fs.readdir(dirPath, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...(await walkDirectory(fullPath)));
+    } else if (entry.isFile() && isPageFile(fullPath)) {
+      files.push(fullPath);
     }
-  });
+  }
+
+  return files;
 }
-await createPagePaths();
+
+export async function createPagePaths() {
+  try {
+    const files = await walkDirectory(PAGES_DIR);
+    const pages = files.map((filePath) => ({
+      path: toRoutePath(filePath),
+      module: filePath.replace(PAGES_DIR, ''),
+    }));
+
+    const payload = JSON.stringify({ pages });
+    await fs.writeFile(PAGES_JSON_PATH, payload, 'utf-8');
+
+    if (existsSync(path.dirname(PUBLIC_PAGES_JSON_PATH))) {
+      await fs.writeFile(PUBLIC_PAGES_JSON_PATH, payload, 'utf-8');
+    }
+
+    console.log(`pages.json generated — ${pages.length} route(s)`);
+  } catch (err) {
+    console.error('Failed to generate pages.json:', err.message);
+    process.exit(1);
+  }
+}
+
+const isMainModule = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
+  await createPagePaths();
+}

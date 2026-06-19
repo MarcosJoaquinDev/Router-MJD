@@ -4,9 +4,10 @@ import {useRoutes} from './useRoutes';
 
 const PUSHSTATE = "pushstate";
 const POPSTATE = "popstate";
+
 export function Router() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
- const router = useRoutes();
+  const router = useRoutes();
 
   useEffect(() => {
     const onLocationChange = () => {
@@ -16,17 +17,21 @@ export function Router() {
     window.addEventListener(POPSTATE, onLocationChange);
     return () => {
       window.removeEventListener(PUSHSTATE, onLocationChange);
-      window.addEventListener(POPSTATE, onLocationChange);
+      window.removeEventListener(POPSTATE, onLocationChange);
     };
   }, []);
+
+  if (router === null) {
+    return <div style={{ color: '#ccc' }}>Loading...</div>;
+  }
+
   let routesParams = {};
   const pathComponent = router.find((r) => {
     if (r.path === currentPath) return true;
-    const mathUrl = match(r.path, { decode: decodeURIComponent });
-    const matched = mathUrl(currentPath);
+    const matchUrl = match(r.path, { decode: decodeURIComponent, sensitive: false });
+    const matched = matchUrl(currentPath);
     if (!matched) return false;
     routesParams = matched.params;
-
     return true;
   });
 

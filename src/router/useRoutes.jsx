@@ -1,30 +1,40 @@
 import { useState, useEffect } from "react";
 
 export function useRoutes() {
-  const [routeData, setRouteData] = useState([]);
+  const [routeData, setRouteData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-        const res = await fetch('/node_modules/mjd-router/lib/router/pages.json');
+      try {
+        const res = await fetch('/pages.json');
+        if (!res.ok) throw new Error(`Failed to fetch pages.json: ${res.status}`);
         const routes = await res.json();
-        updateRoutes(routes);
-      };
+        await updateRoutes(routes);
+      } catch (err) {
+        console.error('useRoutes: fetch error', err);
+        setRouteData([]);
+      }
+    };
 
-      fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
-    async function updateRoutes(updatedRoutes) {
-      const pages = updatedRoutes.pages;
+  async function updateRoutes(updatedRoutes) {
+    const pages = updatedRoutes.pages;
 
-    let component = [];
-
-    component = pages.map(async (p) => {
-      const comp = await import(/* @vite-ignore */ "../../../../src/pages" + p.module);
-      return { path: p.path.toLowerCase(), component: comp.default };
+    const loaders = pages.map(async (p) => {
+      try {
+        const comp = await import(/* @vite-ignore */ `/src/pages${p.module}`);
+        return { path: p.path, component: comp.default };
+      } catch (err) {
+        console.error(`useRoutes: failed to load ${p.module}`, err);
+        return null;
+      }
     });
 
-    const updatedComponents = await Promise.all(component);
-    setRouteData(updatedComponents);
+    const results = await Promise.all(loaders);
+    const valid = results.filter(Boolean);
+    setRouteData(valid);
   }
 
   return routeData;
